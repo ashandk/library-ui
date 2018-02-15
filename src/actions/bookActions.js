@@ -2,8 +2,9 @@ import * as actionTypes from './actionTypes';
 import Axios from 'axios';
 
 //node(library) micro-service URL
-const libraryBookManipulationURL = 'http://localhost:3020/books/';
-const libraryUserAuthanticationURL = 'http://localhost:3020/authenticate';
+const baseURL = 'http://localhost:3020/';
+const libraryBookManipulationURL =  baseURL +'books/';
+const libraryUserAuthanticationURL = baseURL +'user/authenticate';
 
 //hardcoded credentials since it is not required for the login
 const credentials = {
@@ -49,7 +50,7 @@ export const getAuthanticated = () => {
 //get all the books in the library
 export const fetchBooks = () => {
     return (dispatch) => {
-        return Axios.get(libraryBookManipulationURL + "getAllBooks?token="+localStorage.getItem('jwtToken'))
+        return Axios.get(libraryBookManipulationURL + "getAllBooks" + getToken())
             .then(response => {
                 dispatch(fetchBooksSuccess(response.data))
             })
@@ -62,7 +63,7 @@ export const fetchBooks = () => {
 //adding a new book to the library
 export const createBook = (book) => {
     return (dispatch) => {
-        return Axios.post(libraryBookManipulationURL + "insertBook?token="+localStorage.getItem('jwtToken'), book)
+        return Axios.post(libraryBookManipulationURL + "insertBook" + getToken(), book)
             .then(response => {
                 dispatch(createBookSuccess(response.data.books))
             })
@@ -75,7 +76,7 @@ export const createBook = (book) => {
 //deleting a book from the library
 export const deleteBookById = (bookId) => {
     return (dispatch) => {
-        return Axios.post(libraryBookManipulationURL +"deleteBook/"+bookId+"?token="+localStorage.getItem('jwtToken'))
+        return Axios.post(libraryBookManipulationURL +"deleteBook/"+bookId + getToken())
             .then(response => {
                 console.info(response);
                 dispatch(deleteBookByIdSuccess(bookId));
@@ -85,3 +86,7 @@ export const deleteBookById = (bookId) => {
             });
     };
 };
+
+function getToken() {
+    return "?token=" + localStorage.getItem('jwtToken');
+}
