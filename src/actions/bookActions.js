@@ -35,6 +35,7 @@ export const deleteBookByIdSuccess = (bookId) => {
 
 //authanticate the user against the credentials
 export const getAuthanticated = () => {
+  localStorage.removeItem('jwtToken');
   return (dispatch) => {
     return Axios.post(libraryUserAuthanticationURL, credentials)
       .then(response => {
@@ -78,7 +79,6 @@ export const deleteBookById = (bookId) => {
   return (dispatch) => {
     return Axios.post(libraryBookManipulationURL + "deleteBook/" + bookId + getToken())
       .then(response => {
-        console.info(response);
         dispatch(deleteBookByIdSuccess(bookId));
       })
       .catch(error => {
